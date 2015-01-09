@@ -32,19 +32,28 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => 'Главная', 'url' => ['/site/index']],
+            if (Yii::$app->user->isGuest)
+            {
+                $isGuest = [['label' => 'Главная', 'url' => ['/site/index']],
                     ['label' => 'Задачи', 'url' => ['/site/about']],
                     ['label' => 'Настройки', 'url' => ['/site/contact']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => 'Войти/Регистрация', 'url' => ['/site/login']] :
-                        ['label' => 'Выйти (' . Yii::$app->user->identity->username . ')',
+                    ['label' => 'Войти', 'url' => ['/site/login']],
+                    ['label' => 'Регистрация', 'url' => ['/users/registration']]];
+}
+            else
+            {
+                $isGuest = [['label' => 'Главная', 'url' => ['/site/index']],
+                    ['label' => 'Задачи', 'url' => ['/site/about']],
+                    ['label' => 'Настройки', 'url' => ['/site/contact']],
+                    ['label' => 'Выйти (' . Yii::$app->user->identity->username . ')',
                             'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
-                ],
-            ]);
+                            'linkOptions' => ['data-method' => 'post']]];
+            }
+                        
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => $isGuest,
+                ]);
             NavBar::end();
         ?>
 

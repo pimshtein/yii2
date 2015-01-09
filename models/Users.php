@@ -46,9 +46,9 @@ class Users extends ActiveRecord implements IdentityInterface
         return [
             'id' => 'id',
             'email' => 'Email',
-            'name' => 'Name',
-            'surname' => 'Surname',
-            'password' => 'Password',
+            'name' => 'Имя',
+            'surname' => 'Фамилия',
+            'password' => 'Пароль',
         ];
     }
     

@@ -46,16 +46,58 @@ class UsersController extends Controller
         ];
     }
 
+    public function actionIndex()
+    {
+        return $this->render('index');
+    }
+
     public function actionRegistration()
     {
-        $model = new Users;
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) 
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new Users();
+        if ($model->load(Yii::$app->request->post()) && $model->registration()) 
         {
-            return $this->render('entry-confirm', ['model' => $model]);
+            return $this->goBack();
         } 
         else 
         {
-            return $this->render('entry', ['model' => $model]);
+            return $this->render('registration', [
+                'model' => $model,
+            ]);
         }
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+
+        return $this->goHome();
+    }
+
+    public function actionContact()
+    {
+        $model = new ContactForm();
+        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+            Yii::$app->session->setFlash('contactFormSubmitted');
+
+            return $this->refresh();
+        } else {
+            return $this->render('contact', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionAbout()
+    {
+        return $this->render('about');
+    }
+    
+    public function actionSay($message = 'Hello')
+    {
+        return $this->render('say', ['message' => $message]);
     }
 }
